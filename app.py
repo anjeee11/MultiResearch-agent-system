@@ -409,14 +409,23 @@ if st.session_state.running and not st.session_state.done:
     topic_val = st.session_state.topic_input
 
     # ── Step 1: Search ──
-    with st.spinner("🔍  Search Agent is working…"):
+with st.spinner("🔍  Search Agent is working…"):
+    try:
         search_agent = build_search_agent()
+
         sr = search_agent.invoke({
-            "messages": [("user", f"Find recent, reliable and detailed information about: {topic_val}")]
+            "messages": [
+                ("user", f"Find recent, reliable and detailed information about: {topic_val}")
+            ]
         })
+
         results["search"] = sr["messages"][-1].content
         st.session_state.results = dict(results)
-    st.rerun() if False else None   # keep inline for now
+
+    except Exception as e:
+        st.error(f"Search Agent failed: {str(e)}")
+        st.session_state.running = False
+        st.stop()
 
     # ── Step 2: Reader ──
     with st.spinner("📄  Reader Agent is scraping top resources…"):
