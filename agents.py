@@ -4,7 +4,6 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from tools import web_search , scrape_url
 from dotenv import load_dotenv
-import os
 import streamlit as st # type: ignore
 
 load_dotenv()
@@ -12,10 +11,9 @@ load_dotenv()
 #model setup
 llm = ChatGemini(
     model="gemini-1.5-flash",
-    google_api_key=os.getenv("GEMINI_API_KEY"),
+    google_api_key=st.secrets["GEMINI_API_KEY"],
     temperature=0
 )
-
 
 
 #first agent
